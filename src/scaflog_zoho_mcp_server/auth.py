@@ -38,7 +38,8 @@ class ZohoAuth:
             "client_id": self.config.client_id,
             "client_secret": self.config.client_secret,
             "refresh_token": self.config.refresh_token,
-            "grant_type": "refresh_token"
+            "grant_type": "refresh_token",
+            "redirect_uri": "https://www.zohoapis.com"
         }
 
         async with self._client as client:

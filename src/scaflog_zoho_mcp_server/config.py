@@ -30,6 +30,6 @@ def load_config() -> ZohoCreatorConfig:
 
 # API endpoints for different environments
 API_BASE_URL = {
-    "production": "https://creator.zoho.com/api/v2",
+    "production": "https://creator.zoho.com/api/v2/100rails/goscaffold",
     "sandbox": "https://creator.zoho.com/api/v2/sandbox"
 }

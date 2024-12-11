@@ -14,3 +14,7 @@ wheels/
 
 # Flatten repo
 flatten/
+
+# other
+app.log
+.DS_Store
