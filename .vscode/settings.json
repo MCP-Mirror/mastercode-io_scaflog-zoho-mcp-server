@@ -1,0 +1,16 @@
+{
+    "window.commandCenter": 1,
+    "workbench.colorTheme": "Material Theme",
+    "workbench.iconTheme": "material-icon-theme",
+    "editor.fontSize": 14,
+    "files.autoSave": "afterDelay",
+    "files.autoSaveWorkspaceFilesOnly": true,
+    "git.postCommitCommand": "push",
+    "git.enableSmartCommit": false,
+    "git.defaultCommitMessageTemplate": "feat: ",
+    "git.followTagsWhenSync": true,
+    "git.inputValidationSubjectLength": 72,
+    "git.inputValidationLength": 500,
+    "scm.defaultViewMode": "tree",
+    "git.useCommitInputAsStashMessage": true
+}

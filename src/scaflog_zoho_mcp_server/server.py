@@ -102,7 +102,7 @@ async def handle_list_resources() -> list[types.Resource]:
         raise
 
 @server.read_resource()
-async def handle_read_resource(uri: AnyUrl) -> types.TextResourceContents:
+async def handle_read_resource(uri: AnyUrl) -> types.TextResourceContents | types.BlobResourceContents:
     """Read data from Zoho Creator based on the resource URI."""
     try:
         logger.info(f"Reading resource: {uri}")
@@ -134,7 +134,7 @@ async def handle_read_resource(uri: AnyUrl) -> types.TextResourceContents:
                     "link_name": form.link_name,
                     "display_name": form.display_name,
                     "field_count": len(form.fields),
-                    "reports": [r.model_dump() for r in form.reports] if hasattr(form, 'reports') else []
+                    "reports": [r.dict() for r in form.reports] if hasattr(form, 'reports') else []
                 } for form in forms], indent=2)
             )
         
@@ -161,16 +161,25 @@ async def handle_read_resource(uri: AnyUrl) -> types.TextResourceContents:
             form = next((f for f in await service.list_forms() if f.link_name == link_name), None)
             if not form:
                 raise ValueError(f"Form not found: {link_name}")
+            
+            logger.info(f"Processing form: {form.link_name}")
+            logger.info(f"Display name: {form.display_name}")
+            logger.info(f"Field count: {len(form.fields)}")
+
+            text_content = json.dumps({
+                "link_name": form.link_name,
+                "display_name": form.display_name,
+            }, indent=2)
                 
-            return types.TextResourceContents(
-                uri=uri,
-                mimeType="application/json",
-                text=json.dumps({
-                    "link_name": form.link_name,
-                    "display_name": form.display_name,
-                    "fields": [field.model_dump() for field in form.fields]
-                }, indent=2)
-            )
+            result = {
+                "contents": [{
+                    "uri": str(uri),
+                    "mimeType": "application/json",
+                    "text": text_content
+                }]
+            }            
+            logger.info(f"Created TextResourceContents successfully: {result}")
+            return text_content
             
         elif resource_type == "report":
             # Handle filtered records for report
@@ -186,7 +195,7 @@ async def handle_read_resource(uri: AnyUrl) -> types.TextResourceContents:
                 mimeType="application/json",
                 text=json.dumps({
                     "report_name": link_name,
-                    "records": [record.model_dump() for record in records]
+                    "records": [record.dict() for record in records]
                 }, indent=2, default=str)
             )
         
